@@ -28,7 +28,11 @@ const Nav = () => {
             <Link href="/popular">Populares</Link>
 
             {
-                user && <Link href="/create-product">Nuevo Producto</Link>
+                user && Object.keys(user).length !== 0  && 
+                <>
+                    <Link href="/create-product">Nuevo Producto</Link> 
+                    <Link href="/my-products">Mis Productos</Link>
+                </>
             }
             
         </ContainerNav>

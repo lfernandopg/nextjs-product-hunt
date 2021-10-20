@@ -1,16 +1,10 @@
-import React from 'react';
-import Master from '../components/layout/Master'
+import React from 'react'
 import Product from '../components/layout/Product'
-import useProducts from '../hooks/useProducts'
 import { css } from '@emotion/react'
 
-
-const Home = () => {
-
-    const { products } = useProducts('created');
-
+const ListProducts = products => {
     return (
-        <Master>
+        <>
             {
                 products && products.length > 0 ?
                 <div className="list-products">
@@ -40,8 +34,8 @@ const Home = () => {
             :
                 null
             }
-        </Master>
-    )
-} 
-
-export default Home
+        </>
+    );
+}
+ 
+export default ListProducts;

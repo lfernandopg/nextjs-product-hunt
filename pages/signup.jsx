@@ -21,21 +21,16 @@ const SingUp = () => {
 
     const { firebase } = useContext(FirebaseContext);
 
-    async function createAccount()  {
-
+    async function createAccount() {
         try {
-            const res1 = await firebase.createUser(email, password);
-            const res2 = await firebase.updateUser({
+            await firebase.createUser(email, password);
+            await firebase.updateUser({
                 displayName : name
             })
-            console.log(res1)
-            console.log(res2)
             Router.push('/');
-          } catch (error) {
-            console.error('Hubo un error al crear el usuario ', error.message);
+        } catch (error) {
             setError(error.message);
-          }
-
+        }
     }
 
     return (

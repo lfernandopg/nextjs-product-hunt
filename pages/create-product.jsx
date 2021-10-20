@@ -5,10 +5,8 @@ import Form, { Field, Submit, Error } from '../components/ui/Form'
 import useValidation from '../hooks/useValidation'
 import { validateProduct } from '../helpers/Validation'
 import { FirebaseContext } from '../firebase';
-import Router, { useRouter } from 'next/router';
-import { collection, addDoc } from "firebase/firestore";
+import Router from 'next/router';
 import FileUploader from "react-firebase-file-uploader"
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const NewProduct = () => {
 
@@ -37,7 +35,7 @@ const NewProduct = () => {
         if(!user){
             Router.push('/login')
         }
-    }, []);
+    }, [user]);
 
     const handleUploadStart = () => {
         setImage({
@@ -63,19 +61,20 @@ const NewProduct = () => {
     };
   
     const handleUploadSuccess = name => {
-        ref(firebase.storage, "products")
-            .child(name)
-            .getDownloadURL()
-            .then(url => {
-                console.log(url);
-                setImage({
-                    ...image,
-                    uploading : false,
-                    progress : 100,
-                    name,
-                    url
-                });
+        firebase.storage
+        .ref("products")
+        .child(name)
+        .getDownloadURL()
+        .then(url => {
+            console.log(url);
+            setImage({
+                ...image,
+                uploading : false,
+                progress : 100,
+                name,
+                url
             });
+        });
     }; 
 
     async function createProduct()  {
@@ -85,7 +84,8 @@ const NewProduct = () => {
             url,
             description,
             imageUrl : image.url,
-            likes: 0,
+            imageName : image.name,
+            votes: 0,
             comments: [],
             created: Date.now(), 
             owner: {
@@ -94,10 +94,12 @@ const NewProduct = () => {
             }, 
             userVotes: []
         }
+        console.log(product.imageName)
 
         try {
-            const docRef = await addDoc(collection(firebase.db, "products"), product);
+            const docRef = await firebase.db.collection("products").add(product)
             console.log("Document written with ID: ", docRef.id);
+            Router.push(`/product/${docRef.id}`)
         } catch (e) {
             console.error("Error adding document: ", e);
         }
@@ -152,8 +154,8 @@ const NewProduct = () => {
                                 accept="image/*"
                                 id="image"
                                 name="image"
-                                randomizeFile
-                                storageRef={ref(firebase.storage, "products")}
+                                randomizeFilename
+                                storageRef={firebase.storage.ref("products")}
                                 onUploadStart={handleUploadStart}
                                 onUploadError={handleUploadError}
                                 onUploadSuccess={handleUploadSuccess}

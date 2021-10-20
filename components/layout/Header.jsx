@@ -66,7 +66,7 @@ const Header = () => {
                     `}
                 >
 
-                    { user ? 
+                    { user && Object.keys(user).length !== 0 ? 
                         (
                         <>
                             <p

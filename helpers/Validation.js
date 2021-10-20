@@ -58,9 +58,11 @@ export const validateProduct = (values) => {
     if(values.hasOwnProperty('url')) {
         if (values.url === '' || !values.url) {
             errors.url = "La URL es obligatoria"
-        } else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(values.url)) {
+        } 
+        
+        /*else if (!/^(ftp|http|https):\/\/[^ "]+$/.test(values.url)) {
             errors.url = "La URL debe ser valida"
-        }
+        }*/
     }
 
     if (values.hasOwnProperty('description') && (values.description === '' || !values.description)) {

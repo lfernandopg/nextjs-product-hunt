@@ -1,68 +1,74 @@
-import { initializeApp } from 'firebase/app'
+import app from 'firebase/compat/app'
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
+
 import firebaseConfig from './config'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from "firebase/storage";
 
 class Firebase {
 
     constructor() {
-        this.app = initializeApp(firebaseConfig)
-        this.auth = getAuth();
-        this.db = getFirestore(this.app);
-        this.storage = getStorage(this.app);
+        app.initializeApp(firebaseConfig)
+        this.app = app;
+        this.auth = this.app.auth();
+        this.db = this.app.firestore();
+        this.storage = this.app.storage();
     }
 
     async createUser(email, password) {
-        return await createUserWithEmailAndPassword(this.auth, email, password)
-            .then(userCredential => {
-                const user = userCredential.user;
-                return {
-                    error : false,
-                    message : "User created succeful",
-                    user,
-
-                }
-            })
-            .catch(error => {
-                throw {
-                    error : true,
-                    code : error.code,
-                    message : error.message
-                }
-        })
-    }
-
-    async authUser(email, password) {
-        return await signInWithEmailAndPassword(this.auth, email, password)
-            .then(userCredential => {
-                const user = userCredential.user;
-                return user
-            })
-            .catch(error => {
-                throw {
-                    error : true,
-                    code : error.code,
-                    message : error.message
-                }
-        })
-    }
-
-    async updateUser(profile) {
-        return await updateProfile(this.auth.currentUser, {
-            ...profile
-          }).then(() => {
+        return await this.auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const user = userCredential.user;
             return {
                 error : false,
-                message : "Updated Profile"
+                message : "User created successful",
+                user,
+
             }
-          }).catch((error) => {
+        })
+        .catch(error => {
             throw {
                 error : true,
                 code : error.code,
                 message : error.message
             }
-          });
+        })
+    }
+
+    async authUser(email, password) {
+        return await this.auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const user = userCredential.user;
+            return {
+                error : false,
+                message : "User logged in successful",
+                user
+            }
+        })
+        .catch(error => {
+            throw {
+                error : true,
+                code : error.code,
+                message : error.message
+            }
+        })
+    }
+
+    async updateUser(profile) {
+        return await this.auth.currentUser.updateProfile({
+            ...profile
+        }).then(() => {
+            return {
+                error : false,
+                message : "Updated Profile"
+            }
+        }).catch((error) => {
+            throw {
+                error : true,
+                code : error.code,
+                message : error.message
+            }
+        });
     }
 
     async signOut() {
@@ -70,7 +76,7 @@ class Firebase {
             .then(() => {
                 return {
                     error : false,
-                    message : "LogOut"
+                    message : "User logged out successful"
                 }
             }).catch((error) => {
                 throw {
