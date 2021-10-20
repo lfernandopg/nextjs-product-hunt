@@ -95,10 +95,11 @@ const Product = () => {
         // Actualizar el state
         setProduct({
             ...product,
-            votes: newTotal
+            votes: newTotal,
+            userVotes: newUserVotes 
         })
 
-        setQueryDB(true); // hay un voto, por lo tanto consultar a la BD
+        //setQueryDB(true); // hay un voto, por lo tanto consultar a la BD
     }
 
     // Funciones para crear comments
@@ -141,7 +142,7 @@ const Product = () => {
             comments: newComments
         })
 
-        setQueryDB(true); // hay un comment, por lo tanto consultar a la BD
+        //setQueryDB(true); // hay un comment, por lo tanto consultar a la BD
     }
 
     // función que revisa que el owner del product sea el mismo que esta autenticado

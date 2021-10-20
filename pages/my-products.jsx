@@ -57,7 +57,7 @@ const MyProducts = () => {
                     `}
                 >¡Lo sentimos no hay ningun producto! :(</h1>
             :
-                null
+                <h1>Cargando...</h1>
             }
         </Master>
     )
